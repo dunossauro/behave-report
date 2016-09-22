@@ -35,6 +35,24 @@ WebDriverException: Message: Can't load the profile. Profile Dir: /tmp/tmpEBZ5Us
 
 @scenario.end
 
+@scenario.begin
+  Cenário: Verificar se python está no título do site
+    Quando setar o browser no selenium ... failed in 30.190s
+    Então entrar em "https://www.python.org/" ... skipped in 0.000s
+    Dado que o browser esteja na pagina "https://www.python.org/" ... skipped in 0.000s
+    Então a palavra "Python" deve estar no titulo ... skipped in 0.000s
+
+@scenario.end
+
+@scenario.begin
+  Contexto: Verificar se python está no título do site
+    Quando setar o browser no selenium ... passed in 30.190s
+    Então entrar em "https://www.python.org/" ... passed in 0.000s
+    Dado que o browser esteja na pagina "https://www.python.org/" ... passed in 0.000s
+    Então a palavra "Python" deve estar no titulo ... passed in 0.000s
+    E a palavra "Python" deve estar no titulo ... passed in 0.000s
+
+@scenario.end
 --------------------------------------------------------------------------------
 ]]>
             </system-out>
