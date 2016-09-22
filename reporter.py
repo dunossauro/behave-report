@@ -1,5 +1,10 @@
 from re import compile, MULTILINE, DOTALL
 from collections import Counter
+from bokeh.plotting import figure
+from bokeh.embed import file_html
+from bokeh.resources import CDN
+from numpy import pi
+
 colors = {
     'failed': 'red',
     'passed': 'green',
@@ -19,7 +24,7 @@ remove_scenarios = compile(
 scenarios = compile("Cenário: .*|Contexto: .*")
 steps = compile("\s+(.*?) ... (failed|passed|skipped) in (.*)")
 
-xml = open('TESTS-teste.xml').read()
+xml = open('TESTS-lista_global.xml').read()
 html = open('out.html', 'w')
 
 head(html)
@@ -45,10 +50,14 @@ for test in remove_scenarios.findall(xml):
     results = len(out)
     dic = Counter([x[1] for x in out])
     if dic['failed'] != 0:
-        color = 'red'
+        color = colors['failed']
         status = 'FAILED'
+
+    elif dic['skipped'] > 0:
+        color = colors['skipped']
+        status = 'SKIPPED'
     else:
-        color = 'green'
+        color = color['passed']
         status = 'PASSED'
 
     if dic['passed'] == results:
@@ -64,4 +73,16 @@ for test in remove_scenarios.findall(xml):
         for x in dic:
             html.write("<br> {}: {}".format(dic[x], x))
 
+    percents = [dic['skipped']/100, dic['passed']/100, dic['failed']/100]
+    starts = [p*2*pi for p in percents[:-1]]
+    ends = [p*2*pi for p in percents[1:]]
+
+    colors_ = ["red", "green", "blue"]
+
+    p = figure(x_range=(-1,1), y_range=(-1,1))
+
+    p.wedge(x=0, y=0, radius=1, start_angle=starts, end_angle=ends, color=colors_)
+
+
+html.write(file_html(p, CDN))
 html.close()
