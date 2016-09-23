@@ -4,6 +4,7 @@ from bokeh.plotting import figure
 from bokeh.embed import file_html
 from bokeh.resources import CDN
 from numpy import pi
+from sys import argv
 
 colors = {
     'failed': 'red',
@@ -11,42 +12,103 @@ colors = {
     'skipped': 'blue',
 }
 
-
-def head(file):
-    file.write('<head>')
-    file.write('<meta charset="utf-8" />')
-    file.write('</head>')
-    file.write('<body>')
-
 # Baseic regex
 remove_scenarios = compile(
     "@scenario.begin(.*?)@scenario.end", MULTILINE | DOTALL)
 scenarios = compile("Cenário: .*|Contexto: .*")
 steps = compile("\s+(.*?) ... (failed|passed|skipped) in (.*)")
 
-xml = open('TESTS-lista_global.xml').read()
-html = open('out.html', 'w')
+# lista de tuplas que vão formar o gráfico final
+_results = []
 
-head(html)
+# lista dos htmls
+filo = []
 
-for test in remove_scenarios.findall(xml):
-    cen = scenarios.findall(test)
-    html.write('<h4>' + "".join(cen) + '</h4>')
 
+def mount_page(html):
+    """
+    Função que pega os dados colocados na fila e grava no arquivo
+    """
+    html.write('</div>\n')
+    for x in filo:
+        html.write(x)
+
+def grap(html):
+    """
+    Função que gera o gráfico de pizza a partir de un dicionário
+    """
+    t = sum(x[1] for x in _results)
+
+    passed = sum([x[0]['passed'] for x in _results])
+    failed = sum([x[0]['failed'] for x in _results])
+    skipped = sum([x[0]['skipped'] for x in _results])
+
+    percents = [skipped / t,
+                passed / t,
+                failed / t]
+
+    colors_ = ['green', 'blue', 'red']
+    starts = [p * 2 * pi for p in percents[:-1]]
+    ends = [p * 2 * pi for p in percents[1:]]
+
+    p = figure(x_range=(-1, 1), y_range=(-1, 1))
+
+    p.wedge(x=0, y=0, radius=1, start_angle=starts,
+            end_angle=ends, color=colors_)
+
+    html.write(file_html(p, CDN))
+
+
+def head(file):
+    """
+    Cria o head de do arquivo do parametro
+    """
+    file.write('<head>\n')
+    file.write('<meta charset="utf-8" />\n')
+    file.write('<title>Behave Report</title>\n')
+    file.write('</head>\n')
+    file.write('<body>\n')
+    file.write('<div align="center">\n')
+    file.write('<h1>BEHAVE REPORT</h1>\n')
+
+
+def get_scenarios(xml):
+    """
+    Função que itera no xml e busca os cenários
+    E chama a função para retornar os steps ao cenário relacionado
+    """
+    for test in remove_scenarios.findall(xml):
+        cen = scenarios.findall(test)
+        filo.append('<h4>' + "".join(cen) + '</h4>\n')
+
+        get_steps(test)
+
+
+def get_steps(test):
+    """
+    Função que é chamada por get_scenarios e itera na saida do xml
+    Em sequência chama a função de métricas
+    """
     out = steps.findall(test)
     for x in out:
         topics = x[0].split()
         text = " ".join(topics[1:])
 
-        html.write(
-            '<b>{}</b> {}<font color="{}"> {}</font> in {}'.format(
+        filo.append(
+            '<b>{}</b> {}<font color="{}"> {}</font> in {}\n'.format(
                 topics[0],
                 text,
                 colors[x[1]],
                 x[1],
                 x[2]))
-        html.write('<br>')
+        filo.append('<br>')
+    metrics(out)
 
+
+def metrics(out):
+    """
+    Função responsável por extrair o estado do step (failed, passed, skipped)
+    """
     results = len(out)
     dic = Counter([x[1] for x in out])
     if dic['failed'] != 0:
@@ -56,33 +118,37 @@ for test in remove_scenarios.findall(xml):
     elif dic['skipped'] > 0:
         color = colors['skipped']
         status = 'SKIPPED'
+
     else:
-        color = color['passed']
+        color = 'green'
         status = 'PASSED'
 
     if dic['passed'] == results:
-        html.write('<br>\
+        filo.append('<br>\
         <b>\
         <font color="{}">{}</font>\
-        </b>'.format(color, status))
+        </b>\n'.format(color, status))
+
     else:
-        html.write('<br>\
+        filo.append('<br>\
         <b>\
         <font color="{}">{} {} steps:</font>\
-        </b>'.format(color, status, results))
+        </b>\n'.format(color, status, results))
         for x in dic:
-            html.write("<br> {}: {}".format(dic[x], x))
+            filo.append("<br> {}: {}\n".format(dic[x], x))
 
-    percents = [dic['skipped']/100, dic['passed']/100, dic['failed']/100]
-    starts = [p*2*pi for p in percents[:-1]]
-    ends = [p*2*pi for p in percents[1:]]
+    _results.append((dic, sum(dic.values())))
 
-    colors_ = ["red", "green", "blue"]
+if __name__ == '__main__':
+    # --- leitura da entrada
+    xml = open(argv[1]).read()
+    html = open(argv[2], 'w')
 
-    p = figure(x_range=(-1,1), y_range=(-1,1))
+    # -- code
+    get_scenarios(xml)
+    head(html)
+    grap(html)
+    mount_page(html)
 
-    p.wedge(x=0, y=0, radius=1, start_angle=starts, end_angle=ends, color=colors_)
-
-
-html.write(file_html(p, CDN))
-html.close()
+    # --- fecha o arquivo
+    html.close()
