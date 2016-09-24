@@ -10,8 +10,8 @@ from pandas import concat
 #Regex
 REMOVE_SCENARIOS = r_compile(
     r"@scenario.begin(.*?)@scenario.end", MULTILINE | DOTALL)
-R_SCENARIOS = r_compile(r"Cenário: .*|Contexto: .*")
-R_STEPS = r_compile(
+SCENARIOS = r_compile(r"Cenário: .*|Contexto: .*")
+STEPS = r_compile(
     r"\s+(Então|Quando|Dado)(.*?) ... (failed|passed|skipped) in (.*)")
 
 L_DFS = [] # ----- Lista dos dataframes para compilação
@@ -50,18 +50,18 @@ def mount_page(file):
 
 def todo(file):
     """
-    função que precisa ser modificada
-    pois faz tudo
+    Função que itera a regex, cria data frames
+    e gera a fila de htmls para o arquivo
     """
     for text in REMOVE_SCENARIOS.findall(file):
         splited_text = text.lstrip()
 
-        steps = R_STEPS.findall(splited_text)
+        steps = STEPS.findall(splited_text)
 
         text_df = df(steps, columns=['step', 'text', 'state', 'time'])
         L_DFS.append(text_df)
 
-        FILO.append("<h4>{}</h4>".format("".join(R_SCENARIOS.findall(splited_text))))
+        FILO.append("<h4>{}</h4>".format("".join(SCENARIOS.findall(splited_text))))
         FILO.append(text_df.to_html())
 
 if __name__ == '__main__':
