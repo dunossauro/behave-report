@@ -7,16 +7,24 @@ from bokeh.resources import INLINE
 from pandas import DataFrame as df
 from pandas import concat
 
-#Regex
+# Regex
 REMOVE_SCENARIOS = r_compile(
-    r"@scenario.begin(.*?)@scenario.end", MULTILINE | DOTALL)
+    r"^@scenario.begin(.*?)@scenario.end$", MULTILINE | DOTALL)
+# --- get scenarios
 SCENARIOS = r_compile(r"Cenário: .*|Contexto: .*")
+# --- get steps
 STEPS = r_compile(
-    r"\s+(Então|Quando|Dado)(.*?) ... (failed|passed|skipped) in (.*)")
+    r"\s+(E\s|Então|Quando|Dado)(.*?) ... (failed|passed|skipped) in (.*)")
+# --- get data
+ERRORS = r_compile(r'errors="(\d)"')
+SKIPPED = r_compile(r'skipped="(\d)"')
+NAME = r_compile(r'<testcase classname=".*?\.(.*?)"')
+ERROR_DESC = r_compile(r'CDATA\[(.*)]]>.*</error>', MULTILINE | DOTALL)
 
-L_DFS = [] # ----- Lista dos dataframes para compilação
+L_DFS = []  # ----- Lista dos dataframes para compilação
 
 FILO = []   # ----- Fila para o html
+
 
 def head(file, tup):
     """
@@ -42,6 +50,7 @@ def head(file, tup):
     file.write('<head>\n')
     file.write('\t<meta charset="utf-8" />\n')
     file.write('\t<title>Behave Report</title>\n')
+    # ---- Style
     file.write(INLINE.render_js())
     file.write(INLINE.render_css())
     file.write('{}\n'.format(style_table))
@@ -49,9 +58,18 @@ def head(file, tup):
     file.write('</head>\n')
     file.write('<body>\n')
     file.write('\t<div align="center">\n')
+
     file.write('\t\t<h1>BEHAVE REPORT</h1>\n')
     file.write('\t{}\n'.format(tup[1]))
+
+    # ---- Parse informations
+    file.write('\t<h3>Feature: {}</h3><br>\n'.format(
+        NAME.findall(XML)[0]))
     file.write('\t</div>\n')
+    file.write('\tScenarios failed: {}<br>\n'.format(
+        ERRORS.findall(XML)[0]))
+    file.write('\tScenarios skipped: {}<br>\n'.format(
+        SKIPPED.findall(XML)[0]))
 
 
 def mount_graph():
@@ -62,6 +80,7 @@ def mount_graph():
     graph = Donut(all_df, label='state')
     return components(graph, INLINE)
 
+
 def mount_page(file, component):
     """
     Esgota a fila enviado para o html
@@ -69,8 +88,13 @@ def mount_page(file, component):
     head(HTML, component)
     for saida in FILO:
         file.write(saida)
+    file.write('<br>' * 2)
+    for error in ERROR_DESC.findall(XML):
+        file.write('<h4>ERRORS:</h4>{}'.format(
+            error.replace('\n', '<br>')))
     file.write('</html>')
     file.close()
+
 
 def parse_xml(file):
     """
@@ -85,7 +109,8 @@ def parse_xml(file):
         text_df = df(steps, columns=['step', 'text', 'state', 'time'])
         L_DFS.append(text_df)
 
-        FILO.append("<h4>{}</h4>".format("".join(SCENARIOS.findall(splited_text))))
+        FILO.append(
+            "<h4>{}</h4>".format("".join(SCENARIOS.findall(splited_text))))
         FILO.append(text_df.to_html())
 
 if __name__ == '__main__':
