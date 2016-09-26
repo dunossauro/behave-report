@@ -11,10 +11,10 @@ from pandas import concat
 REMOVE_SCENARIOS = r_compile(
     r"^@scenario.begin(.*?)@scenario.end$", MULTILINE | DOTALL)
 # --- get scenarios
-SCENARIOS = r_compile(r"Cenário: .*|Contexto: .*")
+SCENARIOS = r_compile(r"Cen[á|a]rio: .*|Contexto: .*")
 # --- get steps
 STEPS = r_compile(
-    r"\s+(E\s|Então|Quando|Dado)(.*?) ... (failed|passed|skipped) in (.*)")
+    r"\s+(E\s|Ent[ã|a]o|Quando|Dad[o|a|as|os]|Mas)(.*?) ... (failed|passed|skipped) in (.*)")
 # --- get data
 ERRORS = r_compile(r'errors="(\d)"')
 SKIPPED = r_compile(r'skipped="(\d)"')
@@ -118,5 +118,5 @@ if __name__ == '__main__':
     HTML = open(argv[2], 'w')
 
     parse_xml(XML)
-    BCOMPS = mount_graph()
-    mount_page(HTML, BCOMPS)
+    COMPS = mount_graph()
+    mount_page(HTML, COMPS)
