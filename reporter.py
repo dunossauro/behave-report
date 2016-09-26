@@ -100,18 +100,20 @@ def mount_page(file, component):
         file.write(saida)
     file.write('<br>' * 2)
     # --- Write error in code font
-    file.write("""
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-        ERRORS</a>
-      </h4>
-    </div>
-    <div id="collapse1" class="panel-collapse collapse in">
-    """.format('ERRORS'))
-    for error in ERROR_DESC.findall(XML):
-        file.write(error.replace('\n', '<br>'))
+    if ERROR_DESC.findall(XML):
+        file.write("""
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+            ERRORS</a>
+          </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse in">
+        """.format('ERRORS'))
+        for error in ERROR_DESC.findall(XML):
+            file.write(error.replace('\n', '<br>'))
+
     file.write('</div>\n</div>\n</html>')
     file.close()
 
