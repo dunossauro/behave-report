@@ -28,7 +28,7 @@ FILO = []   # ----- Fila para o html
 
 def head(file, tup):
     """
-    Cria o head de do arquivo do parametro
+    Cria o head do arquivo usando o parametro
     """
     style_table = """
     <style>
@@ -59,17 +59,16 @@ def head(file, tup):
                 integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"\
                 crossorigin="anonymous">')
 
-    # file.write('<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"\
-    #             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"\
-    #             crossorigin="anonymous">\
-    #             </script>')
+    file.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">\
+                </script>')
+    file.write('<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">\
+                </script>')
 
     file.write('{}\n'.format(style_table))
     file.write('\t{}\n'.format(tup[0]))
     file.write('</head>\n')
     file.write('<body>\n')
     file.write('\t<div align="center">\n')
-
     file.write('\t\t<h1>BEHAVE REPORT</h1>\n')
     file.write('\t{}\n'.format(tup[1]))
 
@@ -101,10 +100,19 @@ def mount_page(file, component):
         file.write(saida)
     file.write('<br>' * 2)
     # --- Write error in code font
+    file.write("""
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+        ERRORS</a>
+      </h4>
+    </div>
+    <div id="collapse1" class="panel-collapse collapse in">
+    """.format('ERRORS'))
     for error in ERROR_DESC.findall(XML):
-        file.write('<h4>ERRORS:</h4><samp>{}</samp>'.format(
-            error.replace('\n', '<br>')))
-    file.write('</html>')
+        file.write(error.replace('\n', '<br>'))
+    file.write('</div>\n</div>\n</html>')
     file.close()
 
 
