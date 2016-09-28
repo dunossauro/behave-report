@@ -73,13 +73,16 @@ def head(file, tup):
     file.write('\t{}\n'.format(tup[1]))
 
     # ---- Parse informations
-    file.write('\t<h3>Feature: {}</h3><br>\n'.format(
-        NAME.findall(XML)[0]))
+    if NAME.findall(XML):
+        file.write('\t<h3>Feature: {}</h3><br>\n'.format(
+            NAME.findall(XML)[0]))
     file.write('\t</div>\n')
-    file.write('\tScenarios failed: {}<br>\n'.format(
-        ERRORS.findall(XML)[0]))
-    file.write('\tScenarios skipped: {}<br>\n'.format(
-        SKIPPED.findall(XML)[0]))
+    if ERRORS.findall(XML):
+        file.write('\tScenarios failed: {}<br>\n'.format(
+            ERRORS.findall(XML)[0]))
+    if SKIPPED.findall(XML):
+        file.write('\tScenarios skipped: {}<br>\n'.format(
+            SKIPPED.findall(XML)[0]))
 
 
 def mount_graph():
@@ -127,8 +130,8 @@ def parse_xml(file):
         splited_text = text.lstrip()
 
         steps = STEPS.findall(splited_text)
-
         text_df = df(steps, columns=['step', 'text', 'state', 'time'])
+
         L_DFS.append(text_df)
 
         FILO.append(
