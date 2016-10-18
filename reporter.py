@@ -15,11 +15,18 @@ from pages import out_index
 # Regex
 REMOVE_SCENARIOS = r_compile(
     r"^@scenario.begin(.*?)@scenario.end$", MULTILINE | DOTALL)
+
 # --- get scenarios
 SCENARIOS = r_compile(r"Cen[á|a]rio: .*|Contexto: .*")
+
 # --- get steps
-STEPS = r_compile(
-    r"\s+(E\s|Ent[ã|a]o|Quando|Dad[o|a|as|os]|Mas)(.*?) ... (failed|passed|skipped) in (.*)")
+step_words = r'(E\s|Ent[ã|a]o|Quando|Dad[o|a|as|os]|Mas)'
+step_state = r'(failed|passed|skipped)'
+
+STEPS = r_compile(r"\s+{s_w}(.*?) ... {s_s} in (.*)".format(
+                   s_w=step_words,
+                   s_s=step_state))
+
 # --- get data
 ERRORS = r_compile(r'errors="(\d)"')
 SKIPPED = r_compile(r'skipped="(\d)"')
@@ -84,9 +91,13 @@ def parse_xml(file):
         FILO.append(text_df.to_html(classes="table"))
 
 if __name__ == '__main__':
-    XML = open(argv[1]).read()
-    parse_xml(XML)
-    mount_page()
+    try:
+        XML = open(argv[1]).read()
+        parse_xml(XML)
+        mount_page()
 
-    pages = [x[:-5] for x in listdir('.') if x[-4:] == 'html']
-    out_index(pages)
+        pages = [x[:-5] for x in listdir('.') if x[-4:] == 'html']
+        out_index(pages)
+
+    except IndexError:
+        print("Use:\nreporter.py <behave_file.xml>")
