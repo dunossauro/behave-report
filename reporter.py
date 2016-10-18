@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*
+
 from sys import argv
+from os import listdir
 from re import compile as r_compile
 from re import MULTILINE, DOTALL
 from bokeh.charts import Donut
@@ -6,6 +9,8 @@ from bokeh.embed import components
 from bokeh.resources import INLINE
 from pandas import DataFrame as df
 from pandas import concat
+from pages import out_index
+import jinja2
 
 # Regex
 REMOVE_SCENARIOS = r_compile(
@@ -26,60 +31,30 @@ L_DFS = []  # ----- Lista dos dataframes para compilação
 FILO = []   # ----- Fila para o html
 
 
-def head(file, tup):
+def mount_page():
     """
-    Cria o head do arquivo usando o parametro
+    monta uma pagina diferente para cada report chamando os templates do jinja
     """
-    style_table = """
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
+    templateLoader = jinja2.FileSystemLoader(searchpath="./templates")
 
-        th, td {
-            text-align: left;
-            padding: 8px;
-            }
+    templateEnv = jinja2.Environment(loader=templateLoader)
 
-        tr:nth-child(even){background-color: #f2f2f2}
-    </style>
-    """
-    file.write('<!DOCTYPE html>\n')
-    file.write('<html>\n')
-    file.write('<head>\n')
-    file.write('\t<meta charset="utf-8" />\n')
-    file.write('\t<title>Behave Report</title>\n')
-    # ---- Style
-    file.write(INLINE.render_js())
-    file.write(INLINE.render_css())
-    # ---- bootstrap
-    file.write('<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"\
-                rel="stylesheet"\
-                integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"\
-                crossorigin="anonymous">')
+    template = templateEnv.get_template("./report.html")
 
-    file.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">\
-                </script>')
-    file.write('<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">\
-                </script>')
+    tup = mount_graph()
 
-    file.write('{}\n'.format(style_table))
-    file.write('\t{}\n'.format(tup[0]))
-    file.write('</head>\n')
-    file.write('<body>\n')
-    file.write('\t<div align="center">\n')
-    file.write('\t\t<h1>BEHAVE REPORT</h1>\n')
-    file.write('\t{}\n'.format(tup[1]))
+    templateVars = {"boke_js": INLINE.render_js(),
+                    "boke_css": INLINE.render_css(),
+                    "feature": NAME.findall(XML)[0],
+                    "failed": ERRORS.findall(XML)[0],
+                    "skipped": SKIPPED.findall(XML)[0],
+                    "FILO": FILO,
+                    "errors": ERROR_DESC.findall(XML),
+                    "title": tup[0],
+                    "graph": tup[1]}
 
-    # ---- Parse informations
-    file.write('\t<h3>Feature: {}</h3><br>\n'.format(
-        NAME.findall(XML)[0]))
-    file.write('\t</div>\n')
-    file.write('\tScenarios failed: {}<br>\n'.format(
-        ERRORS.findall(XML)[0]))
-    file.write('\tScenarios skipped: {}<br>\n'.format(
-        SKIPPED.findall(XML)[0]))
+    with open('{}.html'.format(argv[1][:-4]), 'w') as rp:
+        rp.writelines(template.render(templateVars))
 
 
 def mount_graph():
@@ -89,34 +64,6 @@ def mount_graph():
     all_df = concat(L_DFS)
     graph = Donut(all_df, label='state')
     return components(graph, INLINE)
-
-
-def mount_page(file, component):
-    """
-    Esgota a fila enviado para o html
-    """
-    head(HTML, component)
-    for saida in FILO:
-        file.write(saida)
-    file.write('<br>' * 2)
-    # --- Write error in code font
-    if ERROR_DESC.findall(XML):
-        file.write("""
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-            ERRORS</a>
-          </h4>
-        </div>
-        <div id="collapse1" class="panel-collapse collapse in">
-        """.format('ERRORS'))
-        for error in ERROR_DESC.findall(XML):
-            file.write(error.replace('\n', '<br>'))
-
-    file.write('</div>\n</div>\n</html>')
-    file.close()
-
 
 def parse_xml(file):
     """
@@ -137,8 +84,8 @@ def parse_xml(file):
 
 if __name__ == '__main__':
     XML = open(argv[1]).read()
-    HTML = open(argv[2], 'w')
-
     parse_xml(XML)
-    COMPS = mount_graph()
-    mount_page(HTML, COMPS)
+    mount_page()
+
+    pages = [x[:-5] for x in listdir('.') if x[-4:] == 'html']
+    out_index(pages)
