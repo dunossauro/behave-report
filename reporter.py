@@ -9,8 +9,8 @@ from bokeh.embed import components
 from bokeh.resources import INLINE
 from pandas import DataFrame as df
 from pandas import concat
+from jinja2 import FileSystemLoader, Environment
 from pages import out_index
-import jinja2
 
 # Regex
 REMOVE_SCENARIOS = r_compile(
@@ -35,11 +35,11 @@ def mount_page():
     """
     monta uma pagina diferente para cada report chamando os templates do jinja
     """
-    templateLoader = jinja2.FileSystemLoader(searchpath="./templates")
+    temp_path = FileSystemLoader(searchpath="./templates")
 
-    templateEnv = jinja2.Environment(loader=templateLoader)
+    j_env = Environment(loader=temp_path)
 
-    template = templateEnv.get_template("./report.html")
+    template = j_env.get_template("./report.html")
 
     tup = mount_graph()
 
@@ -64,6 +64,7 @@ def mount_graph():
     all_df = concat(L_DFS)
     graph = Donut(all_df, label='state')
     return components(graph, INLINE)
+
 
 def parse_xml(file):
     """

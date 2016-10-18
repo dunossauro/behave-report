@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite errors="1" failures="0" name="teste.A palavra python existe na descrição do site" skipped="0" tests="1" time="30.189884">
+    <testcase classname="teste.A palavra python existe na descrição do site" name="Verificar se python está no título do site" status="failed" time="30.189884">
+        <error message="Message: Can't load the profile. Profile Dir: /tmp/tmpEBZ5Us If you specified a ..." type="WebDriverException">
+            <![CDATA[
+Failing step: Quando setar o browser no selenium ... failed in 30.190s
+Location: features/teste.feature:6
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/site-packages/behave/model.py", line 1456, in run
+    match.run(runner.context)
+  File "/usr/lib/python2.7/site-packages/behave/model.py", line 1903, in run
+    self.func(context, *args, **kwargs)
+  File "features/steps/steps.py", line 6, in test
+    context.ff = webdriver.Firefox()
+  File "/usr/lib/python2.7/site-packages/selenium/webdriver/firefox/webdriver.py", line 103, in __init__
+    self.binary, timeout)
+  File "/usr/lib/python2.7/site-packages/selenium/webdriver/firefox/extension_connection.py", line 51, in __init__
+    self.binary.launch_browser(self.profile, timeout=timeout)
+  File "/usr/lib/python2.7/site-packages/selenium/webdriver/firefox/firefox_binary.py", line 68, in launch_browser
+    self._wait_until_connectable(timeout=timeout)
+  File "/usr/lib/python2.7/site-packages/selenium/webdriver/firefox/firefox_binary.py", line 106, in _wait_until_connectable
+    % (self.profile.path))
+WebDriverException: Message: Can't load the profile. Profile Dir: /tmp/tmpEBZ5Us If you specified a log_file in the FirefoxBinary constructor, check it for details.
+
+]]>
+        </error>
+        <system-out>
+            <![CDATA[
+@scenario.begin
+  Cenário: Verificar se python está no título do site
+    Quando setar o browser no selenium ... failed in 30.190s
+    Então entrar em "https://www.python.org/" ... skipped in 0.000s
+    Dado que o browser esteja na pagina "https://www.python.org/" ... skipped in 0.000s
+    Então a palavra "Python" deve estar no titulo ... skipped in 0.000s
+    Então a palavra "Python" deve estar no titulo ... passed in 0.000s
+
+@scenario.end
+
+@scenario.begin
+  Cenário: osiasioaoisoa
+    Quando setar o browser no selenium ... passed in 30.190s
+    Então entrar em "https://www.python.org/" ... passed in 0.000s
+    Dado que o browser esteja na pagina "https://www.python.org/" ... passed in 0.000s
+    Então a palavra "Python" deve estar no titulo ... passed in 0.000s
+    E a palavra "Python" deve estar no titulo ... passed in 0.000s
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+            </system-out>
+        </testcase>
+        </testsuite>
