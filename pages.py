@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*
-import jinja2
+from jinja2 import FileSystemLoader, Environment
 
 
 def out_index(pages):
-    templateLoader = jinja2.FileSystemLoader(searchpath="./templates")
+    temp_path = FileSystemLoader(searchpath="./templates")
 
-    templateEnv = jinja2.Environment(loader=templateLoader)
+    j_env = Environment(loader=templateLoader)
 
     template = templateEnv.get_template("./template.html")
 

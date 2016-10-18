@@ -10,7 +10,7 @@ from bokeh.resources import INLINE
 from pandas import DataFrame as df
 from pandas import concat
 from jinja2 import FileSystemLoader, Environment
-from pages import out_index
+# from pages import out_index
 
 # Regex
 REMOVE_SCENARIOS = r_compile(
@@ -96,8 +96,10 @@ if __name__ == '__main__':
         parse_xml(XML)
         mount_page()
 
-        pages = [x[:-5] for x in listdir('.') if x[-4:] == 'html']
-        out_index(pages)
+        # Implentação futura
+        # provavelmente seja usada com click
+        # pages = [x[:-5] for x in listdir('.') if x[-4:] == 'html']
+        # out_index(pages)
 
     except IndexError:
         print("Use:\nreporter.py <behave_file.xml>")
