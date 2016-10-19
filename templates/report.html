@@ -1,58 +1,32 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Behave Report</title>
-        <!-- BOKEH -->
-        {{boke_js}}
-        {{boke_css}}
-        {{title}}
-        <!-- bootstrap -->
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-              rel="stylesheet"
-              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-              crossorigin="anonymous">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"> </script>
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"> </script>
+    {% include 'template.html' %}
 
-        <!-- Table -->
-        <style>
-            table {
-                border-collapse: collapse;
-                width: 100%;
-            }
-
-            th, td {
-                text-align: left;
-                padding: 8px;
-                }
-
-            tr:nth-child(even){background-color: #f2f2f2}
-        </style>
-    </head>
-    <body>
-        <div align="center">
-
-            <h1>BEHAVE REPORT</h1>
-            <h3>Feature: {{feature}}</h3><br>
+    <!-- BOKEH -->
+    {{boke_js}}
+    {{boke_css}}
+    {{title}}
+</head>
+<body>
+    <div align="center">
+        <h1>BEHAVE REPORT</h1>
+        <h3>Feature: {{feature}}</h3>
+            <br>
             {{graph}}
-
-        </div>
-            cenarios failed: {{failed}}<br>
-            cenarios skipped: {{skipped}}<br>
-            {% for line in FILO %}
-                {{line}}
-            {% endfor %}
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-                  ERRORS</a>
-            </h4>
-          </div>
-         <div id="collapse1" class="panel-collapse collapse in">
-             {% for line in errors %}
-                 {{line}}
-             {% endfor %}
+    </div>
+    cenarios failed: {{failed}}<br>
+    cenarios skipped: {{skipped}}<br>
+    {% for line in FILO %}
+        {{line}}
+    {% endfor %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+              ERRORS</a>
+          </h4>
+     </div>
+     <div id="collapse1" class="panel-collapse collapse in">
+     {% for line in errors %}
+         {{line}}
+     {% endfor %}
     </body>
 </html>

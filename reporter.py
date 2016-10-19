@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 
 from sys import argv
-from os import listdir
+# from os import listdir
 from re import compile as r_compile
 from re import MULTILINE, DOTALL
 from bokeh.charts import Donut
@@ -50,18 +50,18 @@ def mount_page():
 
     tup = mount_graph()
 
-    templateVars = {"boke_js": INLINE.render_js(),
-                    "boke_css": INLINE.render_css(),
-                    "feature": NAME.findall(XML)[0],
-                    "failed": ERRORS.findall(XML)[0],
-                    "skipped": SKIPPED.findall(XML)[0],
-                    "FILO": FILO,
-                    "errors": ERROR_DESC.findall(XML),
-                    "title": tup[0],
-                    "graph": tup[1]}
+    vars = {"boke_js": INLINE.render_js(),
+            "boke_css": INLINE.render_css(),
+            "feature": NAME.findall(XML)[0],
+            "failed": ERRORS.findall(XML)[0],
+            "skipped": SKIPPED.findall(XML)[0],
+            "FILO": FILO,
+            "errors": ERROR_DESC.findall(XML),
+            "title": tup[0],
+            "graph": tup[1]}
 
     with open('{}.html'.format(argv[1][:-4]), 'w') as rp:
-        rp.writelines(template.render(templateVars))
+        rp.writelines(template.render(vars))
 
 
 def mount_graph():
@@ -95,11 +95,5 @@ if __name__ == '__main__':
         XML = open(argv[1]).read()
         parse_xml(XML)
         mount_page()
-
-        # Implentação futura
-        # provavelmente seja usada com click
-        # pages = [x[:-5] for x in listdir('.') if x[-4:] == 'html']
-        # out_index(pages)
-
     except IndexError:
         print("Use:\nreporter.py <behave_file.xml>")
