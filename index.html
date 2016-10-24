@@ -7,10 +7,11 @@
               rel="stylesheet"
               integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
               crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"> </script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"> </script>
 
-        <!-- Table -->
+        <!-- css -->
         <style>
             table {
                 border-collapse: collapse;
@@ -23,14 +24,93 @@
                 }
 
             tr:nth-child(even){background-color: #f2f2f2}
+
+            div {
+              margin: 100px;
+            }
+
+            h1 {
+              font-size: 80px;
+              font-family: 'Open Sans', sans-serif;
+              font-weight: bold;
+            }
+
+            h2 {
+              text-align: center;
+            }
+
+            h3 {
+              text-align: center;
+            }
+
+            img{
+              margin-left: 90px;
+              margin-top: 20px;
+            }
+
+            a{
+              color:black;
+            }
+
+            a:link{
+                color:black;
+            }
+
+            a:hover {
+              text-decoration: none;
+              color:gray;
+            }
+
+            .footer {
+              position: absolute;
+              width: 100%;
+              padding: 1rem;
+              background-color: #efefef;
+              text-align: center;
+            }
+
         </style>
     </head>
+
     <body>
+        <!-- navbar -->
         <nav class="navbar navbar-inverse">
              <a class="navbar-brand" href="/">Home</a>
-            
-            <a class="navbar-brand" href="TESTS-teste.html">TESTS-teste</a>
-            
+             <ul class="nav navbar-nav">
+               <li class="dropdown">
+                 <a href="TESTS-teste.html" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TESTS-teste<span class="caret"></span></a>
+                 <ul class="dropdown-menu">
+                   <li>
+                     <a href="">1</a>
+                   </li>
+                   <li>
+                     <a href="">2</a>
+                   </li>
+                   <li>
+                     <a href="">3</a>
+                   </li>
+                 </ul>
+               </li>
+             </ul>
         </nav>
+        <!-- left menu -->
+        <div align="center" class="container-fluid col-lg-3">
+          <h1> Behave Report </h1>
+          <a href="https://github.com/z4r4tu5tr4/behave-report/tree/jinja">
+            <img src="http://i65.tinypic.com/24zb30n.png" align="left"/>
+          </a>
+          </p>
+        </div>
+        <!-- middle content -->
+        <div class="jumbotron col-sm-7">
+          <h2>Nobody escapes the Spanish Inquisition!</h2>
+          <h3>Nobody expects the Spanish Inquisition! Our chief weapon is surprise… surprise and fear… fear and surprise… our two weapons are fear and surprise… and ruthless efficiency… Our three weapons are fear, surprise and ruthless efficiency… and an almost fanatical devotion to the Pope… Our four… no… amongst our weapons… amongst our weaponry… are such elements as fear, surprise… I’ll come in again.</h3>
+        </div>
+        <!-- footer -->
+        <div class="navbar navbar-fixed-bottom" style="background-color: #222222; width:100%; padding: 15px; margin: 0px; color:white;">
+          <p>
+            "It's not pining, it's passed on! This parrot is no more! It has ceased to be! It's expired and gone to meet its maker! This is a late parrot! It's a stiff! Bereft of life, it rests in peace! If you hadn't nailed it to the perch, it would be pushing up the daisies! It's rung down the curtain and joined the choir invisible. This is an ex-parrot!" - John Cleese, 1969
+          </p>
+        </div>
     </body>
 </html>
