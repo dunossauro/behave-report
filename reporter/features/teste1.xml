@@ -1,0 +1,1895 @@
+<testsuite errors="0" failures="2" name="lista_global.Lista Global" skipped="1" tests="14" time="6450.410763"><testcase classname="lista_global.Lista Global" name="Validar instalação do cliente global na instalação do Warsaw (WS-5784)" status="passed" time="35.672769"><system-out>
+<![CDATA[
+@scenario.begin
+
+  @smoke @notfp
+  Cenário: Validar instalação do cliente global na instalação do Warsaw (WS-5784)
+    Quando preparar ambiente ... passed in 31.750s
+    Então o cliente global devera estar instalado ... passed in 3.923s
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="Acessar url cadastrada na APR e Blacklist da Lista Global (WS-987)" status="passed" time="695.683053"><system-out>
+<![CDATA[
+@scenario.begin
+
+  @smoke
+  Cenário: Acessar url cadastrada na APR e Blacklist da Lista Global (WS-987)
+    Quando preparar ambiente ... passed in 4.316s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.250s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado altero o "opt" do cliente "global" ... passed in 0.187s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado crio a lista "apr" do cliente "global" ... passed in 0.047s
+      """
+      {
+          "content": [
+              "www.paginaverdadeira.com.br | 200.200.200.202 | 200.200.200.202"
+          ],
+          "extension": "apr",
+          "name": "global.apr",
+          "original_data_md5": "daa4dc44b424f0695acf35746f54ed8c"
+      }
+      """
+    Dado crio a lista "bls" do cliente "global" ... passed in 0.031s
+      """
+      {
+          "content": [
+              "http://www.paginaverdadeira.com.br*",
+              "http://www.paginaproibida.com.br*",
+              "http://www.paginafalsa.com.br*"
+          ],
+          "extension": "bls",
+          "name": "global.bls",
+          "original_data_md5": "07a4dec70f14fa61e3c9f9a5a642ad39"
+      }
+      """
+    Dado crio a lista "evt" do cliente "bb" ... passed in 0.047s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "bb.evt",
+          "md5": "",
+          "extension": "evt"
+      }
+
+      """
+    Dado crio a lista "upc" do cliente "bb" ... passed in 0.031s
+      """
+      {
+        "content": [
+          "{",
+          "\"version\" : \"1.0\",",
+          "\"options\" : {",
+          "\"id1\" : {",
+          "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+          "\"interval\" : 1,",
+          "\"salt\" : true,",
+          "\"job\" : \"global\"",
+          "}",
+          "}",
+          "}"
+        ],
+        "extension": "upc",
+        "name": "bb.upc",
+        "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E executar processos do cliente "bb" ... passed in 17.594s
+    E executar processos do cliente "global" ... passed in 10.500s
+    Quando instalar o cliente "bb" ... passed in 30.536s
+    Então o cliente "global" "sim" esta instalado ... passed in 42.936s
+    E atualizar o cliente "global" ... passed in 240.041s
+    E o navegador "sim" devera ser aberto na url "www.paginaverdadeira.com.br" ... passed in 17.043s
+    Então o evento "nao" devera ser enviado na porta "8080" ... passed in 30.577s
+      | Parametro | Valor |
+      | 3         | 54    |
+    Quando "nao" entrar na url "www.paginafalsa.com.br" ... passed in 300.040s
+    Então o evento "sim" devera ser enviado na porta "8080" ... passed in 1.506s
+      | Parametro | Valor |
+      | 3         | 54    |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="Acessar site cadastrado na blacklist da Lista Global (WS-983)" status="passed" time="671.235869"><system-out>
+<![CDATA[
+@scenario.begin
+  Cenário: Acessar site cadastrado na blacklist da Lista Global (WS-983)
+    Quando preparar ambiente ... passed in 13.023s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.519s
+      | Parametro                      | Valor              |
+      | firewall_send_event_rule       | true               |
+      | firewall_block_connections     | false              |
+      | send_event_black_list          | true               |
+      | page_monitor_blacklist_enabled | true               |
+      | eventurl                       | http://[::1]:8080/ |
+    Dado altero o "opt" do cliente "global" ... passed in 0.512s
+      | Parametro                      | Valor              |
+      | firewall_send_event_rule       | true               |
+      | firewall_block_connections     | false              |
+      | send_event_black_list          | true               |
+      | page_monitor_blacklist_enabled | true               |
+      | eventurl                       | http://[::1]:8080/ |
+    Dado crio a lista "bls" do cliente "global" ... passed in 0.100s
+      """
+      {
+          "content": [
+              "http://www.paginaproibida.com.br*",
+              "http://www.paginafalsa.com.br*"
+          ],
+          "extension": "bls",
+          "name": "global.bls",
+          "original_data_md5": "07a4dec70f14fa61e3c9f9a5a642ad39"
+      }
+      """
+    Dado crio a lista "bls" do cliente "bb" ... passed in 0.067s
+      """
+      {
+      "content": [
+      "http://www.dieboldnixdorf.com.br*"
+      ],
+      "extension": "bls",
+      "name": "bb.bls",
+      "original_data_md5": "07a4dec70f14fa61e3c9f9a5a642ad39"
+      }
+      """
+    Dado crio a lista "evt" do cliente "global" ... passed in 0.083s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "global.evt",
+          "extension": "evt"
+      }
+      """
+    Dado crio a lista "evt" do cliente "bb" ... passed in 0.087s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "bb.evt",
+          "md5": "",
+          "extension": "evt"
+      }
+      """
+    Dado crio a lista "upc" do cliente "global" ... passed in 0.065s
+      """
+      {
+      "content": [
+      "{",
+      "\"version\" : \"1.0\",",
+      "\"options\" : {",
+      "\"id1\" : {",
+      "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+      "\"interval\" : 1,",
+      "\"salt\" : true,",
+      "\"job\" : \"global\"",
+      "}",
+      "}",
+      "}"
+      ],
+      "extension": "upc",
+      "name": "global.upc",
+      "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    Dado crio a lista "upc" do cliente "bb" ... passed in 0.062s
+      """
+      {
+      "content": [
+      "{",
+      "\"version\" : \"1.0\",",
+      "\"options\" : {",
+      "\"id1\" : {",
+      "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+      "\"interval\" : 1,",
+      "\"salt\" : true,",
+      "\"job\" : \"global\"",
+      "}",
+      "}",
+      "}"
+      ],
+      "extension": "upc",
+      "name": "bb.upc",
+      "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E executar processos do cliente "bb" ... passed in 18.976s
+    E executar processos do cliente "global" ... passed in 16.181s
+    Quando instalar o cliente "bb" ... passed in 31.404s
+    Então o cliente "global" "sim" esta instalado ... passed in 37.108s
+    E atualizar o cliente "global" ... passed in 240.296s
+    E o navegador "nao" devera ser aberto na url "www.paginafalsa.com.br" ... passed in 311.792s
+    Então o evento "sim" devera ser enviado na porta "8080" ... passed in 0.961s
+      | Parametro | Valor |
+      | 3         | 54    |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="Acessar url cadastrada na Whitelist e Blacklist da Lista Global (WS-986)" status="passed" time="697.181378"><system-out>
+<![CDATA[
+@scenario.begin
+  Cenário: Acessar url cadastrada na Whitelist e Blacklist da Lista Global (WS-986)
+    Quando preparar ambiente ... passed in 3.778s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.228s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado altero o "opt" do cliente "global" ... passed in 0.184s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    E crio a lista "wls" do cliente "global" ... passed in 0.034s
+      """
+      {
+          "name": "global.wls",
+          "original_data_md5": "2f178b3b5d4ca98d6c877bcb77c58fb0",
+          "extension": "wls",
+          "content": [
+              "www.paginaverdadeira.com.br"
+          ]
+      }
+      """
+    Dado crio a lista "bls" do cliente "global" ... passed in 0.036s
+      """
+      {
+          "content": [
+              "http://www.paginaverdadeira.com.br*",
+              "http://www.paginaproibida.com.br*",
+              "http://www.paginafalsa.com.br*"
+          ],
+          "extension": "bls",
+          "name": "global.bls",
+          "original_data_md5": "07a4dec70f14fa61e3c9f9a5a642ad39"
+      }
+      """
+    Dado crio a lista "evt" do cliente "bb" ... passed in 0.038s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "bb.evt",
+          "md5": "",
+          "extension": "evt"
+      }
+      """
+    Dado crio a lista "upc" do cliente "bb" ... passed in 0.025s
+      """
+      {
+      "content": [
+      "{",
+      "\"version\" : \"1.0\",",
+      "\"options\" : {",
+      "\"id1\" : {",
+      "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+      "\"interval\" : 1,",
+      "\"salt\" : true,",
+      "\"job\" : \"global\"",
+      "}",
+      "}",
+      "}"
+      ],
+      "extension": "upc",
+      "name": "bb.upc",
+      "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E executar processos do cliente "bb" ... passed in 20.812s
+    E executar processos do cliente "global" ... passed in 13.453s
+    Quando instalar o cliente "bb" ... passed in 31.274s
+    E atualizar o cliente "bb" ... passed in 35.610s
+    Então o cliente "global" "sim" esta instalado ... passed in 6.202s
+    E atualizar o cliente "global" ... passed in 240.444s
+    E o navegador "sim" devera ser aberto na url "http://www.paginaverdadeira.com.br" ... passed in 13.174s
+    Então o evento "nao" devera ser enviado na porta "8080" ... passed in 30.508s
+      | Parametro | Valor |
+      | 3         | 54    |
+    Quando "nao" entrar na url "www.paginafalsa.com.br" ... passed in 300.025s
+    Então o evento "sim" devera ser enviado na porta "8080" ... passed in 1.356s
+      | Parametro | Valor |
+      | 3         | 54    |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="Whitelist - (WS-3385)" status="passed" time="182.675837"><system-out>
+<![CDATA[
+@scenario.begin
+  Cenário: Whitelist - (WS-3385)
+    Quando preparar ambiente ... passed in 3.208s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.751s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado altero o "opt" do cliente "global" ... passed in 0.429s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    E crio a lista "upc" do cliente "bb" ... passed in 0.056s
+      """
+      {
+      "content": [
+      "{",
+      "\"version\" : \"1.0\",",
+      "\"options\" : {",
+      "\"id1\" : {",
+      "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+      "\"interval\" : 1,",
+      "\"salt\" : true,",
+      "\"job\" : \"global\"",
+      "}",
+      "}",
+      "}"
+      ],
+      "extension": "upc",
+      "name": "bb.upc",
+      "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E crio a lista "upc" do cliente "global" ... passed in 0.049s
+      """
+      {
+      "content": [
+      "{",
+      "\"version\" : \"1.0\",",
+      "\"options\" : {",
+      "\"id1\" : {",
+      "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+      "\"interval\" : 1,",
+      "\"salt\" : true,",
+      "\"job\" : \"global\"",
+      "}",
+      "}",
+      "}"
+      ],
+      "extension": "upc",
+      "name": "global.upc"
+      }
+      """
+    E crio a lista "evt" do cliente "global" ... passed in 0.064s
+      """
+      {
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "global.evt",
+          "extension": "evt"
+      }
+      """
+    E crio a lista "evt" do cliente "bb" ... passed in 0.091s
+      """
+      {
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "bb.evt",
+          "md5": "",
+          "extension": "evt"
+      }
+
+      """
+    E crio a lista "wls" do cliente "bb" ... passed in 0.049s
+      """
+      {
+          "content": [
+              "http://www.ipv6.br*"
+          ],
+          "extension": "wls",
+          "name": "wls.bls"
+      }
+      """
+    E crio a lista "wls" do cliente "global" ... passed in 0.055s
+      """
+      {
+          "content": [
+              "http://www.paginaverdadeira.com*",
+              "http://www.youtube.com*"
+          ],
+          "extension": "wls",
+          "name": "wls.bls"
+      }
+      """
+    Quando executar processos do cliente "bb" ... passed in 16.425s
+    E executar processos do cliente "global" ... passed in 10.974s
+    E instalar o cliente "bb" ... passed in 31.121s
+    E atualizar o cliente "bb" ... passed in 34.512s
+    E o cliente "global" "sim" esta instalado ... passed in 6.104s
+    E o navegador "sim" devera ser aberto na url "http://www.paginaverdadeira.com.br" ... passed in 10.777s
+    Então o evento "nao" devera ser enviado na porta "8080" ... passed in 30.524s
+      | Parametro | Valor |
+      | 3         | 54    |
+    Quando "sim" entrar na url "http://www.ipv6.br/pagina/quem-somos" ... passed in 6.920s
+    Então o evento "nao" devera ser enviado na porta "8080" ... passed in 30.567s
+      | Parametro | Valor |
+      | 3         | 54    |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="Sinal de vida - (WS-3384)" status="skipped" time="0"><skipped /><system-out>
+<![CDATA[
+@scenario.begin
+
+  @ignore
+  Cenário: Sinal de vida - (WS-3384)
+    Quando preparar ambiente ... skipped in 0.000s
+    Dado altero o "opt" do cliente "bb" ... skipped in 0.000s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado altero o "opt" do cliente "global" ... skipped in 0.000s
+      | Parametro                 | Valor              |
+      | eventurl                  | http://[::1]:8080/ |
+      | life_signal_send_triggers | 15                 |
+    E crio a lista "upc" do cliente "bb" ... skipped in 0.000s
+      """
+      {
+        "content": [
+          "{",
+          "\"version\" : \"1.0\",",
+          "\"options\" : {",
+          "\"id1\" : {",
+          "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+          "\"interval\" : 1,",
+          "\"salt\" : true,",
+          "\"job\" : \"global\"",
+          "}",
+          "}",
+          "}"
+        ],
+        "extension": "upc",
+        "name": "bb.upc",
+        "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E crio a lista "upc" do cliente "global" ... skipped in 0.000s
+      """
+      {
+        "content": [
+          "{",
+          "\"version\" : \"1.0\",",
+          "\"options\" : {",
+          "\"id1\" : {",
+          "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+          "\"interval\" : 1,",
+          "\"salt\" : true,",
+          "\"job\" : \"global\"",
+          "}",
+          "}",
+          "}"
+        ],
+        "extension": "upc",
+        "name": "global.upc",
+        "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E crio a lista "evt" do cliente "global" ... skipped in 0.000s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "global.evt",
+          "extension": "evt"
+      }
+      """
+    E crio a lista "evt" do cliente "bb" ... skipped in 0.000s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "global.evt",
+          "extension": "evt"
+      }
+
+      """
+    E executar processos do cliente "bb" ... skipped in 0.000s
+    E executar processos do cliente "global" ... skipped in 0.000s
+    Quando instalar o cliente "bb" ... skipped in 0.000s
+    E atualizar o cliente "bb" ... skipped in 0.000s
+    E instalar o cliente "global" ... skipped in 0.000s
+    E atualizar o cliente "global" ... skipped in 0.000s
+    E reiniciar o core ... skipped in 0.000s
+    Então o evento "sim" devera ser enviado na porta "8080" ... skipped in 0.000s
+      | Parametro | Valor  |
+      | 3         | 124    |
+      | 4         | 1      |
+      | 9         | global |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="Acessar url cadastrada na whitelist (WS-984)" status="passed" time="385.811123"><system-out>
+<![CDATA[
+@scenario.begin
+  Cenário: Acessar url cadastrada na whitelist (WS-984)
+    Quando preparar ambiente ... passed in 3.505s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.273s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado altero o "opt" do cliente "global" ... passed in 0.286s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado crio a lista "evt" do cliente "global" ... passed in 0.049s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "global.evt",
+          "extension": "evt"
+      }
+
+      """
+    Dado crio a lista "evt" do cliente "bb" ... passed in 0.049s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "bb.evt",
+          "md5": "",
+          "extension": "evt"
+      }
+
+      """
+    Dado crio a lista "upc" do cliente "global" ... passed in 0.037s
+      """
+      {
+        "content": [
+          "{",
+          "\"version\" : \"1.0\",",
+          "\"options\" : {",
+          "\"id1\" : {",
+          "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+          "\"interval\" : 1,",
+          "\"salt\" : true,",
+          "\"job\" : \"global\"",
+          "}",
+          "}",
+          "}"
+        ],
+        "extension": "upc",
+        "name": "global.upc",
+        "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    Dado crio a lista "upc" do cliente "bb" ... passed in 0.033s
+      """
+      {
+        "content": [
+          "{",
+          "\"version\" : \"1.0\",",
+          "\"options\" : {",
+          "\"id1\" : {",
+          "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+          "\"interval\" : 1,",
+          "\"salt\" : true,",
+          "\"job\" : \"global\"",
+          "}",
+          "}",
+          "}"
+        ],
+        "extension": "upc",
+        "name": "bb.upc",
+        "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E crio a lista "wls" do cliente "global" ... passed in 0.037s
+      """
+      {
+          "name": "global.wls",
+          "original_data_md5": "2f178b3b5d4ca98d6c877bcb77c58fb0",
+          "extension": "wls",
+          "content": [
+              "http://www.dieboldnixdorf.com.br*"
+          ]
+      }
+      """
+    E executar processos do cliente "bb" ... passed in 15.053s
+    E executar processos do cliente "global" ... passed in 12.153s
+    Quando instalar o cliente "bb" ... passed in 31.167s
+    E atualizar o cliente "bb" ... passed in 35.492s
+    Então o cliente "global" "sim" esta instalado ... passed in 6.231s
+    E atualizar o cliente "global" ... passed in 239.885s
+    E o navegador "sim" devera ser aberto na url "http://www.dieboldnixdorf.com.br" ... passed in 11.009s
+    Então o evento "nao" devera ser enviado na porta "8080" ... passed in 30.550s
+      | Parametro | Valor |
+      | 3         | 54    |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="Acessar site via IP com protocolo HTTP (WS-989)" status="passed" time="648.384887"><system-out>
+<![CDATA[
+@scenario.begin
+  Cenário: Acessar site via IP com protocolo HTTP (WS-989)
+    Quando preparar ambiente ... passed in 3.228s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.415s
+      | Parametro                   | Valor              |
+      | eventurl                    | http://[::1]:8080/ |
+      | firewall_block_connections  | true               |
+      | firewall_send_event_rule    | true               |
+      | firewall_send_event_ip_port | true               |
+    E altero o "opt" do cliente "global" ... passed in 0.354s
+      | Parametro                   | Valor              |
+      | eventurl                    | http://[::1]:8080/ |
+      | firewall_block_connections  | true               |
+      | firewall_send_event_rule    | true               |
+      | firewall_send_event_ip_port | true               |
+    E crio a lista "evt" do cliente "bb" ... passed in 0.071s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": false,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "bb.evt",
+          "extension": "evt"
+      }
+
+      """
+    E crio a lista "evt" do cliente "global" ... passed in 0.064s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "global.evt",
+          "extension": "evt"
+      }
+      """
+    E crio a lista "fwb" do cliente "global" ... passed in 0.057s
+      """
+      {
+          "content": [
+              {
+                  "id": "1537",
+                  "rip": "200.200.200.201",
+                  "p": 80
+              }
+          ],
+          "extension": "fwb",
+          "name": "global.fwb",
+          "original_data_md5": "1ae6678ce9700ac0f71dfbe55fa87308"
+      }
+      """
+    E crio a lista "upc" do cliente "bb" ... passed in 0.049s
+      """
+      {
+        "content": [
+          "{",
+          "\"version\" : \"1.0\",",
+          "\"options\" : {",
+          "\"id1\" : {",
+          "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+          "\"interval\" : 1,",
+          "\"salt\" : true,",
+          "\"job\" : \"global\"",
+          "}",
+          "}",
+          "}"
+        ],
+        "extension": "upc",
+        "name": "bb.upc",
+        "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E executar processos do cliente "bb" ... passed in 14.549s
+    E executar processos do cliente "global" ... passed in 8.456s
+    Quando instalar o cliente "bb" ... passed in 31.136s
+    E atualizar o cliente "bb" ... passed in 35.456s
+    Então o cliente "global" "sim" esta instalado ... passed in 6.354s
+    E atualizar o cliente "global" ... passed in 239.868s
+    E o navegador "nao" devera ser aberto na url "200.200.200.201" ... passed in 308.286s
+    Então o evento "sim" devera ser enviado na porta "8080" ... passed in 0.040s
+      | Parametro | Valor |
+      | 3         | 88    |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="Acessar site cadastrado na APR da Lista Global (WS-985)" status="passed" time="384.938947"><system-out>
+<![CDATA[
+@scenario.begin
+  Cenário: Acessar site cadastrado na APR da Lista Global (WS-985)
+    Quando preparar ambiente ... passed in 3.785s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.544s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado altero o "opt" do cliente "global" ... passed in 0.445s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado crio a lista "apr" do cliente "global" ... passed in 0.077s
+      """
+      {
+          "content": [
+              "www.paginaverdadeira.com.br | 200.200.200.202 | 200.200.200.202"
+          ],
+          "extension": "apr",
+          "name": "global.apr",
+          "original_data_md5": "daa4dc44b424f0695acf35746f54ed8c"
+      }
+      """
+    Dado crio a lista "evt" do cliente "bb" ... passed in 0.080s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "bb.evt",
+          "md5": "",
+          "extension": "evt"
+      }
+      """
+    Dado crio a lista "upc" do cliente "bb" ... passed in 0.050s
+      """
+      {
+      "content": [
+      "{",
+      "\"version\" : \"1.0\",",
+      "\"options\" : {",
+      "\"id1\" : {",
+      "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+      "\"interval\" : 1,",
+      "\"salt\" : true,",
+      "\"job\" : \"global\"",
+      "}",
+      "}",
+      "}"
+      ],
+      "extension": "upc",
+      "name": "bb.upc",
+      "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E executar processos do cliente "bb" ... passed in 14.140s
+    E executar processos do cliente "global" ... passed in 12.415s
+    Quando instalar o cliente "bb" ... passed in 31.123s
+    E atualizar o cliente "bb" ... passed in 34.502s
+    Então o cliente "global" "sim" esta instalado ... passed in 6.229s
+    E atualizar o cliente "global" ... passed in 239.895s
+    E o navegador "sim" devera ser aberto na url "www.paginaverdadeira.com.br" ... passed in 11.075s
+    Então o evento "nao" devera ser enviado na porta "8080" ... passed in 30.578s
+      | Parametro | Valor |
+      | 3         | 54    |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="2 clientes com receive_from_global = true (WS-3386)" status="failed" time="350.047935"><failure message="O cliente nao foi atualizado com sucesso" type="AssertionError">
+<![CDATA[
+Failing step: E atualizar o cliente "bb" ... failed in 240.018s
+Location: warsawbdd\features\lista_global.feature:1163
+Assertion Failed: O cliente nao foi atualizado com sucesso
+Captured logging:
+INFO:builtins:Utilizando clients default, versao: 1.8
+WARNING:warsawbdd.modules.websocketwsc:[WinError 10054] Foi forçado o cancelamento de uma conexão existente pelo host remoto: reconnecting
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+WARNING:warsawbdd.modules.websocketwsc:Falha ao enviar mensagem ao websocket. Exception: The read operation timed out.
+INFO:warsawbdd.helpers.auxiliar:Checking condition with check_update
+INFO:warsawbdd.helpers.auxiliar:Return False after 60 retries]]>
+</failure><system-out>
+<![CDATA[
+@scenario.begin
+
+  @hosts
+  Cenário: 2 clientes com receive_from_global = true (WS-3386)
+    Quando preparar ambiente ... passed in 5.782s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.516s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    E altero o "opt" do cliente "cef" ... passed in 0.507s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8081/ |
+    E altero o "opt" do cliente "global" ... passed in 0.432s
+      | Parametro             | Valor              |
+      | eventurl              | http://[::1]:8082/ |
+      | use_host_file_monitor | true               |
+    E crio a lista "evt" do cliente "bb" ... passed in 0.086s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "bb.evt",
+          "md5": "",
+          "extension": "evt"
+      }
+      """
+    E crio a lista "upc" do cliente "bb" ... passed in 0.049s
+      """
+      {
+        "content": [
+          "{",
+          "\"version\" : \"1.0\",",
+          "\"options\" : {",
+          "\"id1\" : {",
+          "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+          "\"interval\" : 1,",
+          "\"salt\" : true,",
+          "\"job\" : \"global\"",
+          "}",
+          "}",
+          "}"
+        ],
+        "extension": "upc",
+        "name": "bb.upc",
+        "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E crio a lista "evt" do cliente "cef" ... passed in 0.077s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8081"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "cef.evt",
+          "extension": "evt"
+      }
+      """
+    E crio a lista "apr" do cliente "global" ... passed in 0.055s
+      """
+      {
+        "clear_output_directory": true,
+        "extension": "apr",
+        "session_prefix": "XXKUUABBKXRO7C5WRNGIXI24",
+        "dir": "",
+        "name": "bb.apr",
+        "original_data_md5": "daa4dc44b424f0695acf35746f54ed8c",
+        "content": [
+          "www.paginafalsa.com.br | 200.200.200.200 | 200.200.200.200"
+        ],
+        "file_path": "C:\\buildagent\\workspace\\2972\\src\\devservices\\tmp\\2016_11_29\\GF31OZHG9F\\XXKUUABBKXRO7C5WRNGIXI24\\bb.apr",
+        "md5": "fda633b004316ca87c8dc470cc2f703a",
+        "processor": "AprProcessor"
+      }
+      """
+    Quando executar processos do cliente "bb" ... passed in 13.694s
+    E instalar o cliente "bb" ... passed in 31.130s
+    E executar processos do cliente "cef" ... passed in 13.500s
+    E instalar o cliente "cef" ... passed in 30.206s
+    E executar processos do cliente "global" ... passed in 13.996s
+    E atualizar o cliente "bb" ... failed in 240.018s
+    Então o cliente "global" "sim" esta instalado ... skipped in 0.000s
+    Quando atualizar o cliente "global" ... skipped in 0.000s
+    E envenenar o arquivo hosts com o ip "0.0.0.0" para "www.paginafalsa.com.br" ... skipped in 0.000s
+    Então o evento "sim" devera ser enviado na porta "8080" ... skipped in 0.000s
+      | Parametro | Valor  |
+      | 3         | 37     |
+      | 9         | global |
+    E o evento "sim" devera ser enviado na porta "8081" ... skipped in 0.000s
+      | Parametro | Valor  |
+      | 3         | 37     |
+      | 9         | global |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="Acessar site via IP com protocolo HTTPS (WS-988)" status="passed" time="548.338059"><system-out>
+<![CDATA[
+@scenario.begin
+  Cenário: Acessar site via IP com protocolo HTTPS (WS-988)
+    Quando preparar ambiente ... passed in 5.267s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.203s
+      | Parametro                   | Valor              |
+      | eventurl                    | http://[::1]:8080/ |
+      | firewall_block_connections  | true               |
+      | firewall_send_event_rule    | true               |
+      | firewall_send_event_ip_port | true               |
+    E altero o "opt" do cliente "global" ... passed in 0.187s
+      | Parametro                   | Valor              |
+      | eventurl                    | http://[::1]:8080/ |
+      | firewall_block_connections  | true               |
+      | firewall_send_event_rule    | true               |
+      | firewall_send_event_ip_port | true               |
+    E crio a lista "evt" do cliente "bb" ... passed in 0.053s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": false,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "bb.evt",
+          "extension": "evt"
+      }
+
+      """
+    E crio a lista "evt" do cliente "global" ... passed in 0.041s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "global.evt",
+          "extension": "evt"
+      }
+      """
+    E crio a lista "fwb" do cliente "global" ... passed in 0.036s
+      """
+      {
+          "content": [
+              {
+                  "id": "1537",
+                  "rip": "200.200.200.201",
+                  "p": 443
+              }
+          ],
+          "extension": "fwb",
+          "name": "global.fwb",
+          "original_data_md5": "1ae6678ce9700ac0f71dfbe55fa87308"
+      }
+      """
+    E crio a lista "upc" do cliente "bb" ... passed in 0.037s
+      """
+      {
+      "content": [
+      "{",
+      "\"version\" : \"1.0\",",
+      "\"options\" : {",
+      "\"id1\" : {",
+      "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+      "\"interval\" : 1,",
+      "\"salt\" : true,",
+      "\"job\" : \"global\"",
+      "}",
+      "}",
+      "}"
+      ],
+      "extension": "upc",
+      "name": "bb.upc",
+      "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E executar processos do cliente "bb" ... passed in 17.301s
+    E executar processos do cliente "global" ... passed in 12.602s
+    Quando instalar o cliente "bb" ... passed in 30.212s
+    E atualizar o cliente "bb" ... passed in 35.402s
+    Então o cliente "global" "sim" esta instalado ... passed in 6.214s
+    E atualizar o cliente "global" ... passed in 240.016s
+    E o navegador "nao" devera ser aberto na url "https://200.200.200.201" ... passed in 200.669s
+    Então o evento "sim" devera ser enviado na porta "8080" ... passed in 0.098s
+      | Parametro | Valor |
+      | 3         | 88    |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="2 clientes 1 com receive_from_global = true e 1 com receive_from_global = false (WS-3387)" status="failed" time="346.487123"><failure message="O cliente nao foi atualizado com sucesso" type="AssertionError">
+<![CDATA[
+Failing step: E atualizar o cliente "bb" ... failed in 240.020s
+Location: warsawbdd\features\lista_global.feature:1437
+Assertion Failed: O cliente nao foi atualizado com sucesso
+Captured logging:
+INFO:builtins:Utilizando clients default, versao: 1.8
+WARNING:warsawbdd.modules.websocketwsc:[WinError 10054] Foi forçado o cancelamento de uma conexão existente pelo host remoto: reconnecting
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+INFO:warsawbdd.modules.websocketwsc:Connected to warsaw websocket with success
+WARNING:warsawbdd.modules.websocketwsc:Falha ao enviar mensagem ao websocket. Exception: The read operation timed out.
+INFO:warsawbdd.helpers.auxiliar:Checking condition with check_update
+INFO:warsawbdd.helpers.auxiliar:Return False after 60 retries]]>
+</failure><system-out>
+<![CDATA[
+@scenario.begin
+
+  @hosts
+  Cenário: 2 clientes 1 com receive_from_global = true e 1 com receive_from_global = false (WS-3387)
+    Quando preparar ambiente ... passed in 3.781s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.492s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado altero o "opt" do cliente "cef" ... passed in 0.481s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8081/ |
+    Dado altero o "opt" do cliente "global" ... passed in 0.458s
+      | Parametro             | Valor              |
+      | eventurl              | http://[::1]:8082/ |
+      | use_host_file_monitor | true               |
+    Dado crio a lista "evt" do cliente "bb" ... passed in 0.108s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "bb.evt",
+          "md5": "",
+          "extension": "evt"
+      }
+      """
+    Dado crio a lista "upc" do cliente "bb" ... passed in 0.061s
+      """
+      {
+        "content": [
+          "{",
+          "\"version\" : \"1.0\",",
+          "\"options\" : {",
+          "\"id1\" : {",
+          "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+          "\"interval\" : 1,",
+          "\"salt\" : true,",
+          "\"job\" : \"global\"",
+          "}",
+          "}",
+          "}"
+        ],
+        "extension": "upc",
+        "name": "bb.upc",
+        "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E crio a lista "evt" do cliente "cef" ... passed in 0.082s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8081"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": false,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "cef.evt",
+          "extension": "evt"
+      }
+      """
+    E crio a lista "apr" do cliente "global" ... passed in 0.062s
+      """
+      {
+        "clear_output_directory": true,
+        "extension": "apr",
+        "session_prefix": "XXKUUABBKXRO7C5WRNGIXI24",
+        "dir": "",
+        "name": "bb.apr",
+        "original_data_md5": "daa4dc44b424f0695acf35746f54ed8c",
+        "content": [
+          "www.paginafalsa.com.br | 200.200.200.200 | 200.200.200.200"
+        ],
+        "file_path": "C:\\buildagent\\workspace\\2972\\src\\devservices\\tmp\\2016_11_29\\GF31OZHG9F\\XXKUUABBKXRO7C5WRNGIXI24\\bb.apr",
+        "md5": "fda633b004316ca87c8dc470cc2f703a",
+        "processor": "AprProcessor"
+      }
+      """
+    Quando executar processos do cliente "bb" ... passed in 17.582s
+    E instalar o cliente "bb" ... passed in 31.266s
+    E executar processos do cliente "cef" ... passed in 11.190s
+    E instalar o cliente "cef" ... passed in 30.111s
+    E executar processos do cliente "global" ... passed in 10.791s
+    E atualizar o cliente "bb" ... failed in 240.020s
+    Então o cliente "global" "sim" esta instalado ... skipped in 0.000s
+    E atualizar o cliente "global" ... skipped in 0.000s
+    E envenenar o arquivo hosts com o ip "0.0.0.0" para "www.paginafalsa.com.br" ... skipped in 0.000s
+    Então o evento "sim" devera ser enviado na porta "8080" ... skipped in 0.000s
+      | Parametro | Valor  |
+      | 3         | 37     |
+      | 9         | global |
+    Então o evento "nao" devera ser enviado na porta "8081" ... skipped in 0.000s
+      | Parametro | Valor  |
+      | 3         | 37     |
+      | 9         | global |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="Envio de eventos de firewall do cliente global (WS-4881)" status="passed" time="1092.185763"><system-out>
+<![CDATA[
+@scenario.begin
+  Cenário: Envio de eventos de firewall do cliente global (WS-4881)
+    Quando preparar ambiente ... passed in 5.936s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.533s
+      | Parametro                      | Valor              |
+      | firewall_send_event_rule       | true               |
+      | firewall_block_connections     | true               |
+      | firewall_send_event_ip_port    | true               |
+      | send_event_black_list          | true               |
+      | page_monitor_blacklist_enabled | true               |
+      | eventurl                       | http://[::1]:8080/ |
+    Dado altero o "opt" do cliente "global" ... passed in 0.506s
+      | Parametro                      | Valor              |
+      | firewall_send_event_rule       | true               |
+      | firewall_block_connections     | true               |
+      | firewall_send_event_ip_port    | true               |
+      | send_event_black_list          | true               |
+      | page_monitor_blacklist_enabled | true               |
+      | eventurl                       | http://[::1]:8081/ |
+    Dado altero o "opt" do cliente "uni" ... passed in 0.522s
+      | Parametro                      | Valor              |
+      | firewall_send_event_rule       | true               |
+      | firewall_block_connections     | true               |
+      | firewall_send_event_ip_port    | true               |
+      | send_event_black_list          | true               |
+      | page_monitor_blacklist_enabled | true               |
+      | eventurl                       | http://[::1]:8082/ |
+    Dado crio a lista "bls" do cliente "global" ... passed in 0.070s
+      """
+      {
+          "content": [
+              "http://www.paginaproibida.com.br*"
+          ],
+          "extension": "bls",
+          "name": "global.bls",
+          "original_data_md5": "07a4dec70f14fa61e3c9f9a5a642ad39"
+      }
+      """
+    E crio a lista "fwr" do cliente "global" ... passed in 0.086s
+      """
+      {
+          "original_data_md5": "f12bb3355aa53b2848caf0da1b26797a",
+          "content": [
+              {
+                  "scp": 3,
+                  "td": 1,
+                  "id": "1407",
+                  "url": "www.paginaproibida2.com.br*",
+                  "act": 3
+              }
+          ],
+          "name": "global.fwr",
+          "extension": "fwr"
+      }
+      """
+    E crio a lista "fwb" do cliente "global" ... passed in 0.085s
+      """
+      {
+          "content": [
+              {
+                  "id": "1537",
+                  "rip": "200.200.200.200",
+                  "p": 80
+              }
+          ],
+          "extension": "fwb",
+          "name": "global.fwb",
+          "original_data_md5": "1ae6678ce9700ac0f71dfbe55fa87308"
+      }
+      """
+    Dado crio a lista "evt" do cliente "global" ... passed in 0.095s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "54": {
+                          "urls": [
+                              "http://[::1]:8081"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      },
+                      "88": {
+                          "urls": [
+                              "http://[::1]:8081"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      },
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8081"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "global.evt",
+          "extension": "evt"
+      }
+      """
+    Dado crio a lista "evt" do cliente "bb" ... passed in 0.114s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "54": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      },
+                      "88": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      },
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "bb.evt",
+          "extension": "evt"
+      }
+      """
+    Dado crio a lista "evt" do cliente "uni" ... passed in 0.096s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "54": {
+                          "urls": [
+                              "http://[::1]:8082"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      },
+                      "88": {
+                          "urls": [
+                              "http://[::1]:8082"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": false,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      },
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8082"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "send": true,
+                          "receive_from_global": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "uni.evt",
+          "extension": "evt"
+      }
+      """
+    Dado crio a lista "upc" do cliente "bb" ... passed in 0.072s
+      """
+      {
+        "content": [
+          "{",
+          "\"version\" : \"1.0\",",
+          "\"options\" : {",
+          "\"id1\" : {",
+          "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+          "\"interval\" : 1,",
+          "\"salt\" : true,",
+          "\"job\" : \"global\"",
+          "}",
+          "}",
+          "}"
+        ],
+        "extension": "upc",
+        "name": "bb.upc",
+        "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E executar processos do cliente "bb" ... passed in 18.319s
+    E executar processos do cliente "uni" ... passed in 16.460s
+    E executar processos do cliente "global" ... passed in 18.169s
+    Quando instalar o cliente "uni" ... passed in 30.252s
+    Quando instalar o cliente "bb" ... passed in 30.260s
+    Então o cliente "global" "sim" esta instalado ... passed in 36.948s
+    E atualizar o cliente "global" ... passed in 240.022s
+    E o navegador "nao" devera ser aberto na url "www.paginaproibida.com.br" ... passed in 311.135s
+    Então o evento "sim" devera ser enviado na porta "8080" ... passed in 1.341s
+      | Parametro | Valor |
+      | 3         | 54    |
+    E o evento "sim" devera ser enviado na porta "8081" ... passed in 1.222s
+      | Parametro | Valor |
+      | 3         | 54    |
+    E o evento "sim" devera ser enviado na porta "8082" ... passed in 1.062s
+      | Parametro | Valor |
+      | 3         | 54    |
+    Quando "nao" entrar na url "www.paginaproibida2.com.br" ... passed in 189.262s
+    Então o evento "sim" devera ser enviado na porta "8080" ... passed in 0.091s
+      | Parametro | Valor  |
+      | 3         | 88     |
+      | 9         | global |
+    E o evento "sim" devera ser enviado na porta "8081" ... passed in 0.068s
+      | Parametro | Valor  |
+      | 3         | 88     |
+      | 9         | global |
+    Quando "nao" entrar na url "http://200.200.200.200" ... passed in 189.196s
+    Então o evento "sim" devera ser enviado na porta "8080" ... passed in 0.110s
+      | Parametro | Valor  |
+      | 3         | 88     |
+      | 9         | global |
+    E o evento "sim" devera ser enviado na porta "8081" ... passed in 0.088s
+      | Parametro | Valor  |
+      | 3         | 88     |
+      | 9         | global |
+    E o evento "nao" devera ser enviado na porta "8082" ... passed in 0.067s
+      | Parametro | Valor  |
+      | 3         | 88     |
+      | 9         | global |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="lista_global.Lista Global" name="2 clientes 1 com receive_from_global sem info e 1 com receive_from_global = false (WS-3389)" status="passed" time="411.768019"><system-out>
+<![CDATA[
+@scenario.begin
+
+  @hosts
+  Cenário: 2 clientes 1 com receive_from_global sem info e 1 com receive_from_global = false (WS-3389)
+    Quando preparar ambiente ... passed in 3.083s
+    Dado altero o "opt" do cliente "bb" ... passed in 0.613s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8080/ |
+    Dado altero o "opt" do cliente "cef" ... passed in 0.399s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8081/ |
+    Dado altero o "opt" do cliente "global" ... passed in 0.420s
+      | Parametro | Valor              |
+      | eventurl  | http://[::1]:8082/ |
+    Dado crio a lista "apr" do cliente "global" ... passed in 0.043s
+      """
+      {
+          "content": [
+              "www.paginaverdadeira.com.br | 200.200.200.202 | 200.200.200.202"
+          ],
+          "extension": "apr",
+          "name": "global.apr",
+          "original_data_md5": "daa4dc44b424f0695acf35746f54ed8c"
+      }
+      """
+    Dado crio a lista "evt" do cliente "bb" ... passed in 0.046s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8080"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "pack_kind": 1,
+                          "pack_password": 1,
+                          "send": true,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "name": "bb.evt",
+          "md5": "",
+          "extension": "evt"
+      }
+
+      """
+    Dado crio a lista "upc" do cliente "bb" ... passed in 0.028s
+      """
+      {
+        "content": [
+          "{",
+          "\"version\" : \"1.0\",",
+          "\"options\" : {",
+          "\"id1\" : {",
+          "\"url\" : \"http://[::1]:8080/global/warsaw.upd\",",
+          "\"interval\" : 1,",
+          "\"salt\" : true,",
+          "\"job\" : \"global\"",
+          "}",
+          "}",
+          "}"
+        ],
+        "extension": "upc",
+        "name": "bb.upc",
+        "original_data_md5": "bd6c80772eb31f33fd01acf5a3dbd223"
+      }
+      """
+    E crio a lista "evt" do cliente "cef" ... passed in 0.046s
+      """
+      {
+          "original_data_md5": "239d816de5cdd088d4bba03a730a273c",
+          "content": [
+              {
+                  "version": "1.0",
+                  "events": {
+                      "default": {
+                          "urls": [
+                              "http://[::1]:8081"
+                          ],
+                          "cache": true,
+                          "postpone": true,
+                          "time_out": 604800,
+                          "pack_kind": 1,
+                          "pack_password": 1,
+                          "send": true,
+                          "receive_from_global": false,
+                          "status_codes": [
+                              403,
+                              404
+                          ]
+                      }
+                  }
+              }
+          ],
+          "dir": "",
+          "name": "cef.evt",
+          "extension": "evt"
+      }
+      """
+    E executar processos do cliente "bb" ... passed in 13.168s
+    E executar processos do cliente "cef" ... passed in 11.519s
+    E executar processos do cliente "global" ... passed in 8.909s
+    Quando instalar o cliente "bb" ... passed in 31.112s
+    E atualizar o cliente "bb" ... passed in 34.449s
+    E instalar o cliente "cef" ... passed in 30.125s
+    Então o cliente "global" "sim" esta instalado ... passed in 6.106s
+    E atualizar o cliente "global" ... passed in 240.021s
+    Quando envenenar o arquivo hosts com o ip "0.0.0.0" para "http://www.paginaverdadeira.com.br" ... passed in 1.002s
+    Então o evento "sim" devera ser enviado na porta "8080" ... passed in 0.097s
+      | Parametro | Valor |
+      | 3         | 37    |
+    E o evento "nao" devera ser enviado na porta "8081" ... passed in 30.542s
+      | Parametro | Valor |
+      | 3         | 37    |
+    E o evento "sim" devera ser enviado na porta "8082" ... passed in 0.038s
+      | Parametro | Valor |
+      | 3         | 37    |
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase></testsuite>
